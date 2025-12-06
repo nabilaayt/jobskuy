@@ -1,4 +1,5 @@
-import { Text, View, ScrollView, SafeAreaView } from "react-native";
+import { Text, View, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 import { useState } from "react";
 import { StackScreen } from "react-native-screens";

@@ -1,9 +1,15 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { 
+    View, 
+    Text, 
+    TouchableOpacity, 
+    Image 
+} from "react-native";
 
-export default function PopularJobCard() {
+export default function PopularJobCard({ item }: { item: any }) {
     return(
-        <>
-        </>
+        <View >
+
+        </View>
     );
 };
