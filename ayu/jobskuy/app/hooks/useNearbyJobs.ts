@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
-import { fetchJobs } from "../services/job";
+import { fetchNearbyJobs } from "../services/job";
 import { JobType } from "../types/job";
 
-export default function useFetch(query: string) {
+export default function useNearbyJobs() {
   const [data, setData] = useState<JobType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchData = async () => {
     setIsLoading(true);
-
     try {
-      const res = await fetchJobs(query);
+      const res = await fetchNearbyJobs();
       setData(res);
       setError(null);
     } catch (err: any) {
@@ -21,16 +20,9 @@ export default function useFetch(query: string) {
     }
   };
 
-//   useEffect(() => {
-//     const timer = setTimeout(() => {
-//         fetchData();
-//     }, 500);
-//     return () => clearTimeout(timer);
-//   }, [query]);
-
   useEffect(() => {
     fetchData();
-  }, [query]);
+  }, []);
 
   return { data, isLoading, error };
-}
+};

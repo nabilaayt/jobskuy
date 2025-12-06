@@ -12,6 +12,12 @@ import ScreenHeaderBtn from "./components/common/header/ScreenHeaderBtn";
 
 export default function Index() {
   const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearch = () => {
+    if (searchTerm.trim().length === 0) return;
+
+    router.push(`/search/${searchTerm}`);
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-lightWhite">
@@ -31,10 +37,12 @@ export default function Index() {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
-          className="flex-1 px-6 pt-8"
+          className="flex-1 px-6 pt-2"
         >
           <Welcome 
-
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            handleClick={handleSearch}
           />
           <PopularJobs />
           <NearbyJobs />

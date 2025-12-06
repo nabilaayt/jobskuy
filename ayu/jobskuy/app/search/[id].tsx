@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Image, TouchableOpacity, View } from "react-native";
-import { Stack, useRouter, useSearchParams } from "expo-router";
-import { Text, SafeAreaView } from "react-native";
+import { Stack, useRouter, useLocalSearchParams } from "expo-router";
+import { Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import ScreenHeaderBtn from "../components/common/header/ScreenHeaderBtn";
 import NearbyJobs from "../components/home/NearbyJobs";
 import { icons } from "../constants";
 import { fetchJobs } from "../services/job";
 
 export default function JobSearch(){
-    const params = useSearchParams();
+    const params = useLocalSearchParams();
     const router = useRouter()
 
     const [searchResult, setSearchResult] = useState([]);
@@ -23,8 +24,8 @@ export default function JobSearch(){
         try {
             const data = await fetchJobs(params.id as string, page);
             setSearchResult(data);
-        } catch (err) {
-            setSearchError(err);
+        } catch (error) {
+            setSearchError(error);
         } finally {
             setSearchLoader(false);
         }
@@ -42,9 +43,9 @@ export default function JobSearch(){
         handleSearch()
     }, [page]);
 
-    // return(
-    //     <SafeAreaView>
-    //         <Stack.Screen />
-    //     </SafeAreaView>
-    // )
+    return(
+        <SafeAreaView>
+            <Stack.Screen />
+        </SafeAreaView>
+    )
 }

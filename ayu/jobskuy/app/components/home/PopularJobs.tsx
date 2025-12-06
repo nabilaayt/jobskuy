@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "expo-router";
 import { 
     Text, 
@@ -7,13 +7,14 @@ import {
     FlatList,
     ActivityIndicator,
 } from "react-native";
-import { fetchJobs } from "../../services/job";
+import useFetch from "../../hooks/useFetch";
 import PopularJobCard from "../common/cards/PopularJobCard";
 
 export default function PopularJobs() {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const [selectedJob, setSelectedJob] = useState(null);
+    const { data, isLoading, error } = useFetch("");
+
 
     return(
         <View className="mt-6">
@@ -30,15 +31,17 @@ export default function PopularJobs() {
                     <Text>Something went wrong</Text>
                 ) : (
                     <FlatList 
-                        data={jobs}
+                        data={data}
                         horizontal
                         showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item) => item?.job_id}
+                        keyExtractor={(item) => item.slug}
                         renderItem={({ item }) => (
                             <PopularJobCard 
                                 item={item}
+                                selectedJob={selectedJob}
                             />
                         )}
+                        ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
                     />
                 )}
             </View>

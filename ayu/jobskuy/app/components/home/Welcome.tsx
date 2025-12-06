@@ -11,12 +11,13 @@ import { useRouter } from "expo-router";
 import { icons } from "../../constants";
 
 const jobTypes = ["Full-time", "Part-time", "Contractor"];
+interface WelcomeProps {
+  searchTerm: string;
+  setSearchTerm: (text: string) => void;
+  handleClick: () => void;
+}
 
-export default function Welcome({ 
-    searchTerm = "", 
-    setSearchTerm = () => {}, 
-    handleClick = () => {}
-}) {
+export default function Welcome({ searchTerm, setSearchTerm, handleClick }: WelcomeProps) {
     const router = useRouter();
     const [activeJobType, setActiveJobType] = useState("Full-time");
 
@@ -27,18 +28,18 @@ export default function Welcome({
                 <Text className="font-medium text-2xl color-primary mt-2">Find your perfect job</Text>
             </View>
 
-            <View className="justify-center items-center flex flex-row mt-8 h-[50px]">
+            <View className="justify-center items-center flex flex-row mt-6 h-[50px]">
                 <View className="flex-1 bg-white justify-center items-center rounded-lg h-full">
                     <TextInput 
                         className="font-regular text-base w-full h-full px-6"
-                        value=""
-                        onChange={() => {}}
+                        value={searchTerm}
+                        onChangeText={(text) => setSearchTerm(text)}
                         placeholder="What are you looking for?"
                     />
                 </View>
 
                 <TouchableOpacity 
-                    onPress={() => {}}
+                    onPress={handleClick}
                     className="w-[50px] h-full bg-tertiary rounded-lg justify-center items-center"
                 >
                     <Image 
@@ -50,7 +51,7 @@ export default function Welcome({
                 </TouchableOpacity>
             </View>
 
-            <View className="w-full mt-8">
+            <View className="w-full mt-6">
                 <FlatList
                     data={jobTypes}
                     horizontal
