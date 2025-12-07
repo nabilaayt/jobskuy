@@ -1,11 +1,11 @@
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 import { useState } from "react";
 import { StackScreen } from "react-native-screens";
 import { icons } from "./constants";
 import NearbyJobs from "./components/home/NearbyJobs";
-import PopularJobs from "./components/home/PopularJobs";
+import PopularJobs from "./components/home/FeaturedJobs";
 import Welcome from "./components/home/Welcome";
 import ScreenHeaderBtn from "./components/common/header/ScreenHeaderBtn";
 
@@ -13,14 +13,19 @@ import ScreenHeaderBtn from "./components/common/header/ScreenHeaderBtn";
 export default function Index() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+
   const handleSearch = () => {
+    const trimmedSearchTerm = searchTerm.trim();
     if (searchTerm.trim().length === 0) return;
 
-    router.push(`/search/${searchTerm}`);
+    Keyboard.dismiss();
+
+    const encodedTerm = encodeURIComponent(trimmedSearchTerm);
+    router.push(`/search/${encodedTerm}`);
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-lightWhite">
+    <SafeAreaView className="flex-1 bg-lightWhite" edges={['bottom']}>
       <Stack.Screen
         options={{
           headerStyle: { backgroundColor: "#FAFAFC" },

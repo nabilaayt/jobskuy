@@ -1,89 +1,49 @@
-import { JobType } from "../types/job";
+import { MOCK_JOBS_DATA, searchJobs, getJobById } from "../constants/mockData";
 
-const EUROPE_LOCATIONS = [
-  "germany", "berlin", "munich",
-  "france", "paris",
-  "netherlands", "amsterdam",
-  "belgium",
-  "sweden", "norway", "denmark",
-  "spain", "italy", "portugal",
-  "finland", "switzerland", "austria",
-  "ireland", "united kingdom", "uk", "london",
-  "scotland", "wales",
-  "poland", "romania", "hungary",
-  "czech", "slovakia", "slovenia",
-  "croatia", "greece"
-];
+const NETWORK_DELAY = 500;
 
-export async function fetchJobs(query: string, page: number = 1): Promise<JobType[]> {
-  const url = `https://arbeitnow.com/api/job-board-api?page=${page}`;
-
-  await new Promise(res => setTimeout(res, 300));
+export async function fetchJobs(query: string = "", page: number = 1) {
+  await new Promise(resolve => setTimeout(resolve, NETWORK_DELAY));
 
   try {
-    const res = await fetch(url, {
-      headers: {
-        "Cache-Control": "no-cache",
-      }
-    });
+    let jobs = [];
 
-    if (res.status === 429) {
-      console.warn("Rate limit from API — retrying...");
-      await new Promise(res => setTimeout(res, 1000)); // retry setelah 1 detik
-      return fetchJobs(query, page); // recursive retry
+    if (query && query.trim() !== "") {
+      jobs = searchJobs(query);
+    } else {
+      jobs = MOCK_JOBS_DATA;
     }
 
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+    const itemsPerPage = 10;
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedJobs = jobs.slice(startIndex, endIndex);
 
-    const json = await res.json();
-    const q = query?.toLowerCase() ?? "";
-
-    return json.data
-      .filter((job: any) => q === "" || job.title?.toLowerCase().includes(q))
-      .map((job: any) => ({
-        slug: job.slug,
-        title: job.title,
-        company_name: job.company_name,
-        location: job.location,
-        url: job.url,
-      }));
+    return {
+      data: paginatedJobs,
+      total: jobs.length,
+      page: page,
+      hasMore: endIndex < jobs.length,
+    };
   } catch (error) {
     console.error("Fetch error:", error);
     throw error;
   }
 };
 
-export async function fetchNearbyJobs(page: number = 1): Promise<JobType[]> {
-  const url = `https://arbeitnow.com/api/job-board-api?page=${page}`;
+export async function fetchJobDetails(jobId: string) {
+  await new Promise(resolve => setTimeout(resolve, NETWORK_DELAY));
 
   try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-
-    const json = await res.json();
-
-    // Filter khusus Eropa
-    let filtered = json.data.filter((job: any) => {
-      const loc = job.location?.toLowerCase() || "";
-      return EUROPE_LOCATIONS.some((e) => loc.includes(e));
-    });
-
-    // fallback kalau tidak ada job Eropa
-    if (filtered.length === 0) {
-      console.warn("No Europe jobs found — using fallback top 10");
-      filtered = json.data.slice(0, 10);
+    const job = getJobById(jobId);
+    
+    if (!job) {
+      throw new Error(`Job with ID ${jobId} not found`);
     }
 
-    return filtered.map((job: any) => ({
-      slug: job.slug,
-      title: job.title,
-      company_name: job.company_name,
-      location: job.location,
-      url: job.url,
-    }));
-  } catch (err) {
-    console.error("Fetch Nearby Jobs Error:", err);
-    return [];
+    return job;
+  } catch (error) {
+    console.error("Fetch job details error:", error);
+    throw error;
   }
 };
-

@@ -17,6 +17,8 @@ import Specifics from "../components/jobdetails/Specifics";
 import useFetch from "../hooks/useFetch";
 import { icons } from "../constants";
 
+const tabs = ["About", "Qualifications", "Responsibilities"];
+
 export default function JobDetails() {
   const params = useLocalSearchParams ();
   const router = useRouter();
@@ -24,6 +26,7 @@ export default function JobDetails() {
     job_id: params.id
   });
   const [refreshing, setRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState(tabs[0]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -31,8 +34,36 @@ export default function JobDetails() {
     setRefreshing(false)
   }, []);
 
+  const displayTabContent = () => {
+    switch (activeTab) {
+      case "Qualifications":
+        return (
+          <Specifics
+            title='Qualifications'
+            points={data[0].job_highlights?.Qualifications ?? ["N/A"]}
+          />
+        );
+
+      case "About":
+        return (
+          <About info={data[0].job_description ?? "No data provided"} />
+        );
+
+      case "Responsibilities":
+        return (
+          <Specifics
+            title='Responsibilities'
+            points={data[0].job_highlights?.Responsibilities ?? ["N/A"]}
+          />
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
-    <SafeAreaView className="flex-1 bg-lightWhite">
+    <SafeAreaView className="flex-1 w-full bg-lightWhite" edges={['bottom']}>
       <Stack.Screen
         options={{
           headerTitle: "",
@@ -50,7 +81,7 @@ export default function JobDetails() {
           headerRight: () => (
             <ScreenHeaderBtn 
                 iconUrl={icons.share}
-                dimension={30}
+                dimension={26}
             />
           ),          
         }}
@@ -73,17 +104,23 @@ export default function JobDetails() {
             ) : (
                 <View className="p-6 pb-50">
                     <Company 
-                        companyLogo={data[0].employer_logo}
-                        jobTitle={data[0].job_title}
-                        companyName={data[0].employer_name}
-                        location={data[0].job_country}
+                      companyLogo={data[0].employer_logo}
+                      jobTitle={data[0].job_title}
+                      companyName={data[0].employer_name}
+                      location={data[0].job_country}
                     />
                     <Tabs 
-                    
+                      tabs={tabs}
+                      activeTab={activeTab}
+                      setActiveTab={setActiveTab}
                     />
+
+                    {displayTabContent()}
                 </View>
             )}
         </ScrollView>
+
+        <Footer url={data[0]?.job_google_link ?? 'https://careers.google.com/jobs/results/'} />
       </>
     </SafeAreaView>
   );
