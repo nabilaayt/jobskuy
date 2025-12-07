@@ -18,7 +18,7 @@ interface FetchJobsResponse {
 
 export default function JobSearch(){
     const params = useLocalSearchParams();
-    const router = useRouter()
+    const router = useRouter();
 
     const [searchResult, setSearchResult] = useState<JobType[]>([]);
     const [searchLoader, setSearchLoader] = useState(false);

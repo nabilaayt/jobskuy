@@ -25,7 +25,7 @@ export default function Welcome({ searchTerm, setSearchTerm, handleClick }: Welc
     return(
         <View className="py-6">
             <View className="w-full">
-                <Text className="font-regular text-xl color-secondary">Hello Nabila</Text>
+                <Text className="font-regular text-xl color-secondary">Hello, welcome back</Text>
                 <Text className="font-medium text-2xl color-primary mt-2">Find your perfect job</Text>
             </View>
 

@@ -22,7 +22,7 @@ interface FeaturedJobCardProps {
 export default function FeaturedJobCard({ 
     item, 
     selectedJob,
-    handleCardPress 
+    handleCardPress
 }: FeaturedJobCardProps) {
     const isSelected = selectedJob === item.job_id;
     

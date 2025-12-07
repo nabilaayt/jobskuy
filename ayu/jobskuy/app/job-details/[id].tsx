@@ -78,12 +78,12 @@ export default function JobDetails() {
                 handlePress={() => router.back()}
             />
           ),
-          headerRight: () => (
-            <ScreenHeaderBtn 
-                iconUrl={icons.share}
-                dimension={26}
-            />
-          ),          
+          // headerRight: () => (
+          //   <ScreenHeaderBtn 
+          //       iconUrl={icons.share}
+          //       dimension={26}
+          //   />
+          // ),          
         }}
       />
 
